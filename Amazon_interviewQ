@@ -59,3 +59,133 @@ class Solution:
         return longestLength
 21
         
+#2 Implement atoi which converts a string to an integer.
+
+The function first discards as many whitespace characters as necessary until the first non-whitespace character is found. Then, starting from this character, takes an optional initial plus or minus sign followed by as many numerical digits as possible, and interprets them as a numerical value.
+
+The string can contain additional characters after those that form the integral number, which are ignored and have no effect on the behavior of this function.
+
+If the first sequence of non-whitespace characters in str is not a valid integral number, or if no such sequence exists because either str is empty or it contains only whitespace characters, no conversion is performed.
+
+If no valid conversion could be performed, a zero value is returned.
+
+Note:
+
+Only the space character ' ' is considered as whitespace character.
+Assume we are dealing with an environment which could only store integers within the 32-bit signed integer range: [−231,  231 − 1]. If the numerical value is out of the range of representable values, INT_MAX (231 − 1) or INT_MIN (−231) is returned.
+Example 1:
+
+Input: "42"
+Output: 42
+Example 2:
+
+Input: "   -42"
+Output: -42
+Explanation: The first non-whitespace character is '-', which is the minus sign.
+             Then take as many numerical digits as possible, which gets 42.
+Example 3:
+
+Input: "4193 with words"
+Output: 4193
+Explanation: Conversion stops at digit '3' as the next character is not a numerical digit.
+Example 4:
+
+Input: "words and 987"
+Output: 0
+Explanation: The first non-whitespace character is 'w', which is not a numerical 
+             digit or a +/- sign. Therefore no valid conversion could be performed.
+Example 5:
+
+Input: "-91283472332"
+Output: -2147483648
+Explanation: The number "-91283472332" is out of the range of a 32-bit signed integer.
+             Thefore INT_MIN (−231) is returned.
+Python3	
+1
+import re
+2
+​
+3
+class Solution:
+4
+    def myAtoi(self, str: str) -> int:
+5
+        neg = False
+6
+        
+7
+        str_temp = re.match(r'(\s*)(\S*)', str)
+8
+        return_str = str_temp.group(2)
+9
+​
+10
+        pattern = re.compile('[a-zA-Z]')
+11
+        if(pattern.match(return_str) != None):
+12
+            print("The first non-whitespace character is 'w', which is not a numerical digit or a +/- sign")
+13
+            return 0
+14
+            
+15
+        pattern = re.compile('^\-')
+16
+        if(pattern.match(return_str) != None):
+17
+            neg = True
+18
+            return_str = re.sub('^\-', '' , return_str)
+19
+        elif(re.match('^\+',return_str) != None):
+20
+            neg = False
+21
+            return_str = re.sub('^\+', '' , return_str)
+22
+        
+23
+        pattern = re.compile('\d')
+24
+        if(pattern.match(return_str) == None):
+25
+            print("no integer in this loop")
+26
+            return 0
+27
+        else:
+28
+            if(re.match(r'(\d+)(\D+)(\d+)', return_str) != None):
+29
+                print("special situation")
+30
+                group_str = re.match(r'(\d+)(\D+)(\d+)', return_str)
+31
+                return_str = group_str.group(1)
+32
+            else:
+33
+                return_str = re.sub('\D', '', return_str)
+34
+        
+35
+        if(int(return_str) > pow(2,31)-1):
+36
+            if(neg == False):
+37
+                return pow(2,31) -1
+38
+            else:
+39
+                return pow(-2, 31)
+40
+        else:
+41
+            if(neg == True):
+42
+                return int(return_str) * -1
+43
+            else:
+44
+                return int(return_str)
